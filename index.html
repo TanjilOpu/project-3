@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBSTU Mess & Sublet Finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">MBSTU <span>Mess</span> Finder</div>
+  <div class="header-actions" id="headerActions">
+    <button class="btn btn-ghost" onclick="showPage('browse')">Browse Messes</button>
+    <button class="btn btn-ghost" onclick="showPage('ownerLogin')">Owner Login</button>
+    <button class="btn btn-primary" onclick="showPage('ownerRegister')">Register Mess</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero" id="heroSection">
+  <h1>Find Your Perfect<br><em>Mess or Sublet</em></h1>
+  <p>Browse verified mess and sublet listings near MBSTU — filter by price, amenities, and distance.</p>
+  <div class="hero-tabs">
+    <button class="btn btn-primary" onclick="showPage('browse')">🔍 Browse Messes</button>
+    <button class="btn btn-ghost" onclick="showPage('ownerRegister')">📋 List Your Mess</button>
+    <button class="btn btn-ghost" onclick="showPage('ownerLogin')">🔑 Owner Login</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ═══ PAGE: BROWSE ═══ -->
+  <div class="page active" id="page-browse">
+    <div class="filter-panel">
+      <div class="filter-panel-title">🎯 Filter Messes</div>
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label>Mess Type</label>
+          <select id="f_type">
+            <option value="">Any</option>
+            <option value="BOYS">Boys</option>
+            <option value="GIRLS">Girls</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Location Area</label>
+          <select id="f_location">
+            <option value="">Any</option>
+            <option value="TOWN">Town</option>
+            <option value="SANTOS">Santos</option>
+            <option value="KAGMARI">Kagmari</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Max Rent (BDT)</label>
+          <input type="number" id="f_rent" placeholder="e.g. 3000" min="0">
+        </div>
+        <div class="filter-group">
+          <label>Max Distance (m)</label>
+          <input type="number" id="f_distance" placeholder="e.g. 1000" min="0">
+        </div>
+        <div class="filter-group">
+          <label>Min Seats Available</label>
+          <input type="number" id="f_seats" placeholder="e.g. 1" min="0">
+        </div>
+        <div class="filter-group">
+          <label>WiFi Required</label>
+          <select id="f_wifi">
+            <option value="">Any</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Meal System</label>
+          <select id="f_meal">
+            <option value="">Any</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Gas Required</label>
+          <select id="f_gas">
+            <option value="">Any</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-primary" onclick="applyFilters()">Search Messes</button>
+        <button class="btn btn-ghost" onclick="resetFilters()">Reset</button>
+      </div>
+    </div>
+    <div class="results-count" id="resultsCount"></div>
+    <div class="mess-grid" id="messGrid"></div>
+  </div>
+
+  <!-- ═══ PAGE: OWNER REGISTER ═══ -->
+  <div class="page" id="page-ownerRegister">
+    <span class="section-back" onclick="showPage('browse')">← Back to Browse</span>
+    <div class="form-card">
+      <div class="form-title">Register as Mess Owner</div>
+      <div class="form-subtitle">Create your account to manage mess listings.</div>
+      <div class="form-error" id="regError"></div>
+      <div class="form-success" id="regSuccess"></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="reg_name" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label>Phone / Email *</label>
+          <input type="text" id="reg_contact" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group full">
+          <label>Username *</label>
+          <input type="text" id="reg_username" placeholder="Choose a unique username">
+        </div>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="reg_password" placeholder="Min 6 characters">
+        </div>
+        <div class="form-group">
+          <label>Confirm Password *</label>
+          <input type="password" id="reg_confirm" placeholder="Repeat password">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="registerOwner()">Create Account</button>
+        <button class="btn btn-ghost" onclick="showPage('ownerLogin')">Already registered? Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: OWNER LOGIN ═══ -->
+  <div class="page" id="page-ownerLogin">
+    <span class="section-back" onclick="showPage('browse')">← Back to Browse</span>
+    <div class="form-card">
+      <div class="form-title">Owner Login</div>
+      <div class="form-subtitle">Log in to manage your mess listings.</div>
+      <div class="form-error" id="loginError"></div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login_username" placeholder="Your username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login_password" placeholder="Your password">
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="loginOwner()">Login</button>
+        <button class="btn btn-ghost" onclick="showPage('browse')">Cancel</button>
+      </div>
+      <div class="login-switch">Don't have an account? <a onclick="showPage('ownerRegister')">Register here</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: OWNER DASHBOARD ═══ -->
+  <div class="page" id="page-ownerDashboard">
+    <div class="owner-header">
+      <div class="owner-info">
+        <div class="name" id="ownerNameDisplay">Welcome, Owner</div>
+        <div class="role">Mess Owner · <span id="ownerContactDisplay"></span></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="logoutOwner()">Logout</button>
+    </div>
+    <div class="stats-row" id="ownerStats"></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchOwnerTab('myListings', this)">My Listings</button>
+      <button class="nav-tab" onclick="switchOwnerTab('addMess', this)">+ Add New Mess</button>
+    </div>
+
+    <!-- My Listings Tab -->
+    <div id="tab-myListings">
+      <div class="mess-grid" id="ownerMessGrid"></div>
+    </div>
+
+    <!-- Add / Edit Mess Tab -->
+    <div id="tab-addMess" style="display:none">
+      <div class="form-card" style="max-width:100%">
+        <div class="form-title" id="messFormTitle">Add New Mess / Sublet</div>
+        <div class="form-subtitle">All information will be visible to students browsing the site.</div>
+        <div class="form-error" id="messFormError"></div>
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Mess Name *</label>
+            <input type="text" id="mf_name" placeholder="e.g. Al-Amin Mess">
+          </div>
+          <div class="form-group">
+            <label>Mess Type *</label>
+            <select id="mf_type">
+              <option value="BOYS">Boys</option>
+              <option value="GIRLS">Girls</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Location Area *</label>
+            <select id="mf_location">
+              <option value="TOWN">Town</option>
+              <option value="SANTOS">Santos</option>
+              <option value="KAGMARI">Kagmari</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Distance from MBSTU (m) *</label>
+            <input type="number" id="mf_distance" placeholder="e.g. 500" min="0">
+          </div>
+          <div class="form-group full">
+            <label>Specific Address *</label>
+            <input type="text" id="mf_address" placeholder="Street, Village, House No.">
+          </div>
+          <div class="form-group">
+            <label>Rent Per Seat (BDT) *</label>
+            <input type="number" id="mf_rent" placeholder="e.g. 2500" min="1">
+          </div>
+          <div class="form-group">
+            <label>Available Seats *</label>
+            <input type="number" id="mf_seats" placeholder="e.g. 5" min="0">
+          </div>
+          <div class="form-group">
+            <label>People Per Room (max)</label>
+            <input type="number" id="mf_ppr" placeholder="e.g. 2" min="1" value="2">
+          </div>
+          <div class="form-group">
+            <label>Electricity Lines</label>
+            <input type="number" id="mf_elec" placeholder="e.g. 1" min="1" value="1">
+          </div>
+
+          <div class="form-divider">Amenities</div>
+
+          <div class="form-group">
+            <label>WiFi Available</label>
+            <select id="mf_wifi">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Gas Available</label>
+            <select id="mf_gas">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tiled Room</label>
+            <select id="mf_tiled">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Meal System</label>
+            <select id="mf_meal" onchange="toggleMealInput()">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+          <div class="form-group" id="mealDayGroup" style="display:none">
+            <label>Meals Per Day</label>
+            <input type="number" id="mf_mealsday" placeholder="1-3" min="1" max="3" value="2">
+          </div>
+          <div class="form-group">
+            <label>Single Seat Available</label>
+            <select id="mf_single" onchange="toggleSingleInput()">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+          <div class="form-group" id="singleCostGroup" style="display:none">
+            <label>Single Seat Cost (BDT)</label>
+            <input type="number" id="mf_singlecost" placeholder="e.g. 4000" min="0" value="0">
+          </div>
+
+          <div class="form-divider">Mess Photos (Optional — up to 6 images)</div>
+          <div class="form-group full">
+            <label>Upload Mess Images</label>
+            <div class="img-upload-area" onclick="document.getElementById('mf_image_input').click()">
+              <input type="file" id="mf_image_input" accept="image/*" multiple onchange="previewImages(event)" style="display:none">
+              <div class="img-upload-label">📷 Click to upload photos (select multiple at once)</div>
+            </div>
+            <div class="img-preview-grid" id="mf_image_preview_grid"></div>
+            <input type="hidden" id="mf_image_data" value="">
+          </div>
+
+          <div class="form-group full">
+            <label>Description / Notes</label>
+            <textarea id="mf_desc" placeholder="Rules, facilities, nearby landmarks, etc."></textarea>
+          </div>
+
+        </div>
+        <input type="hidden" id="mf_editId" value="">
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveMess()">Save Listing</button>
+          <button class="btn btn-ghost" onclick="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.page-ownerDashboard -->
+
+</div><!-- /.main -->
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="closeDetailModal(event)">
+  <div class="modal" id="detailModalContent"></div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal" onclick="closeDeleteModal(event)">
+  <div class="del-modal">
+    <div class="del-modal-title">🗑️ Delete Listing</div>
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:8px">Are you sure you want to permanently delete:</p>
+    <p id="deleteMessName" style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--text)"></p>
+    <p style="color:var(--muted);font-size:0.85rem;margin-top:8px">This action cannot be undone.</p>
+    <div class="del-modal-actions">
+      <button class="btn btn-danger" onclick="confirmDelete()">Yes, Delete</button>
+      <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
